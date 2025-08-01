@@ -1,6 +1,7 @@
 package org.capco.flexiprice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.capco.flexiprice.controller.client.ClientController;
 import org.capco.flexiprice.dto.ProfessionalSaveRequestDTO;
 import org.capco.flexiprice.service.client.PersonalService;
 import org.capco.flexiprice.service.client.ProfessionalService;

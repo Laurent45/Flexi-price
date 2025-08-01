@@ -23,7 +23,7 @@ The application uses Spring Web and Spring Data JPA (Spring boot v.3.5.4), organ
    ```
 2. Enter the project directory:
    ```bash
-   cd flexi-price
+   cd Flexi-price
    ```
 3. Build the project:
    ```bash

@@ -1,10 +1,9 @@
-package org.capco.flexiprice.controller;
+package org.capco.flexiprice.controller.cart;
 
 import jakarta.validation.Valid;
-import org.capco.flexiprice.dto.CartDTO;
+import org.capco.flexiprice.dto.CartWithTotalAmountDTO;
 import org.capco.flexiprice.dto.ProductAddRequestDTO;
 import org.capco.flexiprice.dto.ProductAddToCartDTO;
-import org.capco.flexiprice.entity.cart.Cart;
 import org.capco.flexiprice.entity.cart.CartProductPrice;
 import org.capco.flexiprice.service.cart.CartService;
 import org.slf4j.Logger;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/v1/carts")
@@ -38,11 +35,8 @@ public class CartController {
     }
 
     @GetMapping("/{cartId}")
-    public CartDTO getCart(@PathVariable Long cartId) {
+    public CartWithTotalAmountDTO getCart(@PathVariable Long cartId) {
         LOG.info("Received request to get product from cart {} and total price.", cartId);
-        Cart cart = cartService.getCartById(cartId);
-
-        BigDecimal totalAmount = cartService.calculateTotalAmount(cart);
-        return CartDTO.cartProductPriceToProductDTO(cartId, cart.getCartProductPrices(), totalAmount);
+        return cartService.getCartWithTotalAmount(cartId);
     }
 }

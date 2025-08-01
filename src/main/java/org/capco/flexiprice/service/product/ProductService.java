@@ -11,6 +11,7 @@ import org.capco.flexiprice.repository.product.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,11 +28,27 @@ public class ProductService {
         this.productPriceRepository = productPriceRepository;
     }
 
+    /**
+     * Retrieves all products from the repository and converts them to DTOs.
+     *
+     * @return a list of ProductDTO representing all products
+     */
+    @Transactional(readOnly = true)
     public List<ProductDTO> getProducts() {
         List<Product> products = productRepository.findAll();
         return ProductDTO.from(products);
     }
 
+    /**
+     * Retrieves the price for a given product and client type.
+     *
+     * @param productName the name of the product
+     * @param clientType the type of client
+     * @return the ProductPrice for the specified product and client type
+     * @throws ProductNotFoundException if the product does not exist
+     * @throws ProductPriceNotFoundException if no price is set for the client type
+     */
+    @Transactional(readOnly = true)
     public ProductPrice getProductPrice(String productName, ClientType clientType) {
         LOG.info("Fetching price for product '{}' and client type '{}'", productName, clientType);
 

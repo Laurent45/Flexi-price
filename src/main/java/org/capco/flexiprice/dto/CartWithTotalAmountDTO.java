@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
-public record CartDTO(
+public record CartWithTotalAmountDTO(
     Long cartId,
     List<ProductItemDTO> products,
     BigDecimal totalAmount
@@ -17,11 +17,11 @@ public record CartDTO(
             int quantity
     ) {}
 
-    public static CartDTO cartProductPriceToProductDTO(Long cartId, Set<CartProductPrice> cartProductPrices, BigDecimal totalAmount) {
+    public static CartWithTotalAmountDTO cartProductPriceToProductDTO(Long cartId, Set<CartProductPrice> cartProductPrices, BigDecimal totalAmount) {
         List<ProductItemDTO> productItemDTOS = cartProductPrices.stream()
-                .map(CartDTO::cartProductPriceToProductDTO)
+                .map(CartWithTotalAmountDTO::cartProductPriceToProductDTO)
                 .toList();
-        return new CartDTO(cartId, productItemDTOS, totalAmount);
+        return new CartWithTotalAmountDTO(cartId, productItemDTOS, totalAmount);
     }
 
     private static ProductItemDTO cartProductPriceToProductDTO(CartProductPrice cartProductPrice) {

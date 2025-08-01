@@ -1,5 +1,6 @@
 package org.capco.flexiprice.service.cart;
 
+import org.capco.flexiprice.dto.CartWithTotalAmountDTO;
 import org.capco.flexiprice.dto.ProductAddRequestDTO;
 import org.capco.flexiprice.entity.cart.Cart;
 import org.capco.flexiprice.entity.cart.CartProductPrice;
@@ -12,9 +13,9 @@ import org.capco.flexiprice.service.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -32,6 +33,18 @@ public class CartService {
         this.productService = productService;
     }
 
+    /**
+     * Adds a product to the cart with the specified cart ID.
+     * If the cart does not exist, throws {@link CartNotFoundException}.
+     * If the product is already in the cart, increases its quantity.
+     * Otherwise, creates a new cart product entry.
+     *
+     * @param cartId the ID of the cart
+     * @param productRequest the product details and quantity to add
+     * @return the updated {@link CartProductPrice} entity
+     * @throws CartNotFoundException if the cart is not found
+     */
+    @Transactional
     public CartProductPrice addProductToCart(Long cartId, ProductAddRequestDTO productRequest) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> {
@@ -50,15 +63,35 @@ public class CartService {
         return cartProductPriceRepository.save(cartProductPrice);
     }
 
-    public Cart getCartById(Long cartId) {
-        return cartRepository.findById(cartId)
+    /**
+     * Retrieves the cart with the specified ID and calculates its total amount.
+     * Throws {@link CartNotFoundException} if the cart does not exist.
+     *
+     * @param cartId the ID of the cart to retrieve
+     * @return a {@link CartWithTotalAmountDTO} containing cart details and total amount
+     * @throws CartNotFoundException if the cart is not found
+     */
+    @Transactional(readOnly = true)
+    public CartWithTotalAmountDTO getCartWithTotalAmount(Long cartId) {
+        Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> {
                     LOG.warn("Cart with id {} not found", cartId);
                     return new CartNotFoundException("Cart with id " + cartId + " not found");
                 });
+
+        BigDecimal totalAmount = calculateTotalAmount(cart);
+
+        return CartWithTotalAmountDTO.cartProductPriceToProductDTO(cartId, cart.getCartProductPrices(), totalAmount);
     }
 
-    public BigDecimal calculateTotalAmount(Cart cart) {
+    /**
+     * Calculates the total amount for all products in the given cart.
+     * Sums the price multiplied by quantity for each product in the cart.
+     *
+     * @param cart the {@link Cart} entity containing products
+     * @return the total amount as {@link BigDecimal}
+     */
+    private BigDecimal calculateTotalAmount(Cart cart) {
         return cart.getCartProductPrices().stream()
                 .map(this::getProductPriceInCart)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
