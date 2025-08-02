@@ -2,9 +2,9 @@
 
 ## Introduction
 
-**flexi-price** is a Spring Boot POC for calculating shopping cart prices for an online product sales company.
+**Flexi-price** is a Spring Boot POC for calculating shopping cart prices for an online product sales company.
 The company sells three types of products: high-end phones, mid-range phones, and laptops.
-There are two client types: personal and professional, each with specific pricing rules based on their profile and annual revenue.
+There are two client types: personal and professional, each with specific pricing rules based on their types and for professional on their annual revenue.
 The application uses Spring Web and Spring Data JPA (Spring boot v.3.5.4), organized in a multi-layer architecture.
 
 ## Getting Started
@@ -12,7 +12,7 @@ The application uses Spring Web and Spring Data JPA (Spring boot v.3.5.4), organ
 ### Requirements
 
 - Java 24
-- Maven Wrapper (included, no need to install Maven)
+- Maven 3.9.11
 - curl
 
 ### Download and Run
@@ -35,29 +35,33 @@ The application uses Spring Web and Spring Data JPA (Spring boot v.3.5.4), organ
    ```
    > For MySQL, use the default profile, add the dependency in `pom.xml`, and set up a local database (e.g., with Docker).
 
-## API Usage (curl examples)
 
-### Create a Professional Client
-```bash
-curl --request POST \
-  --url http://localhost:8080/api/v1/clients/professional \
-  --header 'content-type: application/json' \
-  --data '{
-    "legalName": "SCI Stock Market",
-    "vatNumber": "FR12345678901",
-    "sirenNumber": "73282932033",
-    "annualRevenue": 10000000
-  }'
-```
+## Example Scenarios
 
-### Retrieve Professional Client Info
-```bash
-curl --request GET \
-  --url http://localhost:8080/api/v1/clients/professional/73282932033
-```
+Below are three example scenarios demonstrating API usage for different client types.
+When running the application with the \`dev\` profile, the following products are automatically added to the database:
 
-### Create a Personal Client
+- **MacBook Pro** (Laptop)
+   - Personal client price: €1200
+   - Professional client (revenue ≥ €10M): €900
+   - Professional client (revenue < €10M): €1000
+
+- **iPhone 15 Pro Max** (High-end phone)
+   - Personal client price: €1500
+   - Professional client (revenue ≥ €10M): €1000
+   - Professional client (revenue < €10M): €1150
+
+- **Google Pixel 7a** (Mid-range phone)
+   - Personal client price: €800
+   - Professional client (revenue ≥ €10M): €550
+   - Professional client (revenue < €10M): €600
+
+### 1\. Personal Client Shopping
+
+A personal client named Kevin Marlot creates an account, adds a MacBook Pro to their cart, and retrieves the cart details.
+
 ```bash
+# Create personal client
 curl --request POST \
   --url http://localhost:8080/api/v1/clients/personal \
   --header 'content-type: application/json' \
@@ -66,36 +70,129 @@ curl --request POST \
     "firstName": "Kevin",
     "lastName": "Marlot"
   }'
-```
 
-### Retrieve Personal Client Info
-```bash
-curl --request GET \
-  --url http://localhost:8080/api/v1/clients/personal/kmarlot
-```
-
-### List Available Products
-```bash
-curl --request GET \
-  --url http://localhost:8080/api/v1/products
-```
-
-### Add Product to Cart
-```bash
+# Add product to cart
 curl --request POST \
   --url http://localhost:8080/api/v1/carts/1/product \
   --header 'content-type: application/json' \
   --data '{
     "name": "MacBook Pro",
-    "quantity": 5
+    "quantity": 1
   }'
-```
 
-### Get Cart Information
-```bash
+curl --request POST \
+  --url http://localhost:8080/api/v1/carts/1/product \
+  --header 'content-type: application/json' \
+  --data '{
+    "name": "iPhone 15 Pro Max",
+    "quantity": 1
+  }'
+
+curl --request POST \
+  --url http://localhost:8080/api/v1/carts/1/product \
+  --header 'content-type: application/json' \
+  --data '{
+    "name": "Google Pixel 7a",
+    "quantity": 1
+  }'
+
+# Get cart information
 curl --request GET \
   --url http://localhost:8080/api/v1/carts/1
 ```
+
+<hr>
+
+### 2\. Professional Client (Annual Revenue >= 10 Million)
+A professional client with high annual revenue creates an account, adds five MacBook Pros to their cart, and retrieves the cart details.
+
+```bash
+# Create professional client
+curl --request POST \
+--url http://localhost:8080/api/v1/clients/professional \
+--header 'content-type: application/json' \
+--data '{
+"legalName": "SCI Stock Market",
+"vatNumber": "FR12345678901",
+"sirenNumber": "73282932033",
+"annualRevenue": 10000000
+}'
+
+# Add products to cart
+curl --request POST \
+--url http://localhost:8080/api/v1/carts/2/product \
+--header 'content-type: application/json' \
+--data '{
+"name": "MacBook Pro",
+"quantity": 5
+}'
+
+curl --request POST \
+--url http://localhost:8080/api/v1/carts/2/product \
+--header 'content-type: application/json' \
+--data '{
+"name": "iPhone 15 Pro Max",
+"quantity": 2
+}'
+
+curl --request POST \
+--url http://localhost:8080/api/v1/carts/2/product \
+--header 'content-type: application/json' \
+--data '{
+"name": "Google Pixel 7a",
+"quantity": 3
+}'
+
+# Get cart information
+curl --request GET \
+--url http://localhost:8080/api/v1/carts/2
+```
+
+### 3\. Professional Client (Annual Revenue < 10 Million)
+   A professional client with lower annual revenue creates an account, adds two mid-range phones to their cart, and retrieves the cart details.
+
+```bash
+# Create professional client
+curl --request POST \
+--url http://localhost:8080/api/v1/clients/professional \
+--header 'content-type: application/json' \
+--data '{
+"legalName": "Tech Innovators",
+"vatNumber": "FR98765432109",
+"sirenNumber": "12345678901",
+"annualRevenue": 5000000
+}'
+
+# Add products to cart
+curl --request POST \
+--url http://localhost:8080/api/v1/carts/3/product \
+--header 'content-type: application/json' \
+--data '{
+"name": "Mid-range Phone",
+"quantity": 2
+}'
+
+curl --request POST \
+--url http://localhost:8080/api/v1/carts/3/product \
+--header 'content-type: application/json' \
+--data '{
+"name": "MacBook Pro",
+"quantity": 1
+}'
+
+curl --request POST \
+--url http://localhost:8080/api/v1/carts/3/product \
+--header 'content-type: application/json' \
+--data '{
+"name": "iPhone 15 Pro Max",
+"quantity": 1
+}'
+
+# Get cart information
+curl --request GET \
+--url http://localhost:8080/api/v1/carts/3
+```
+
 
 ## Suggestions for Improvement
 
