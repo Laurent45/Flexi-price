@@ -10,8 +10,12 @@ import org.capco.flexiprice.exception.SirenNumberAlreadyExistsException;
 import org.capco.flexiprice.exception.UserNameAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.List;
 
 @ControllerAdvice
 public class ExceptionHandlerController {
@@ -32,6 +36,20 @@ public class ExceptionHandlerController {
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 e.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiErrorDTO> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        List<String> invalidInput = e.getBindingResult().getFieldErrors().stream()
+                .map(FieldError::getDefaultMessage)
+                .toList();
+
+        ApiErrorDTO apiError = new ApiErrorDTO(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "Validation error: " + invalidInput
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
