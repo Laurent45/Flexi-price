@@ -2,6 +2,7 @@ package org.capco.flexiprice.service.cart;
 
 import org.capco.flexiprice.dto.CartWithTotalAmountDTO;
 import org.capco.flexiprice.dto.ProductAddRequestDTO;
+import org.capco.flexiprice.dto.ProductAddToCartDTO;
 import org.capco.flexiprice.entity.cart.Cart;
 import org.capco.flexiprice.entity.cart.CartProductPrice;
 import org.capco.flexiprice.entity.cart.CartProductPriceKey;
@@ -33,19 +34,21 @@ public class CartService {
         this.productService = productService;
     }
 
-    /**
-     * Adds a product to the cart with the specified cart ID.
-     * If the cart does not exist, throws {@link CartNotFoundException}.
-     * If the product is already in the cart, increases its quantity.
-     * Otherwise, creates a new cart product entry.
-     *
-     * @param cartId the ID of the cart
-     * @param productRequest the product details and quantity to add
-     * @return the updated {@link CartProductPrice} entity
-     * @throws CartNotFoundException if the cart is not found
-     */
+ /**
+  * Adds a product to the cart with the specified cart ID.
+  * <p>
+  * If the cart does not exist, throws {@link CartNotFoundException}.
+  * If the product is already in the cart, increases its quantity.
+  * Otherwise, creates a new cart product entry.
+  * </p>
+  *
+  * @param cartId         the ID of the cart
+  * @param productRequest the product details and quantity to add
+  * @return the updated {@link ProductAddToCartDTO} containing cart ID, product name, and updated quantity
+  * @throws CartNotFoundException if the cart is not found
+  */
     @Transactional
-    public CartProductPrice addProductToCart(Long cartId, ProductAddRequestDTO productRequest) {
+    public ProductAddToCartDTO addProductToCart(Long cartId, ProductAddRequestDTO productRequest) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> {
                     LOG.warn("Cart with id {} not found", cartId);
@@ -60,7 +63,8 @@ public class CartService {
 
         cartProductPrice.addQuantity(productRequest.quantity());
 
-        return cartProductPriceRepository.save(cartProductPrice);
+        CartProductPrice cartProductPriceSaved = cartProductPriceRepository.save(cartProductPrice);
+        return new ProductAddToCartDTO(cartId, productRequest.name(), cartProductPriceSaved.getQuantity());
     }
 
     /**

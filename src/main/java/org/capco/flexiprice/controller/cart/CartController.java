@@ -30,8 +30,7 @@ public class CartController {
     @PostMapping("/{cartId}/product")
     public ProductAddToCartDTO addProductToCart(@PathVariable Long cartId, @RequestBody @Valid ProductAddRequestDTO requestBody) {
         LOG.info("Received request to add product to cart. {}, {}", cartId, requestBody);
-        CartProductPrice cartProductPrice = cartService.addProductToCart(cartId, requestBody);
-        return new ProductAddToCartDTO(cartId, requestBody.name(), cartProductPrice.getQuantity());
+        return cartService.addProductToCart(cartId, requestBody);
     }
 
     @GetMapping("/{cartId}")
