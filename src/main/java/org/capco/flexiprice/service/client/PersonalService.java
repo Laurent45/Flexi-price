@@ -41,7 +41,7 @@ public class PersonalService {
         PersonalClient personalClient = request.toPersonalClient();
         PersonalClient personalClientSaved = personalRepository.save(personalClient);
 
-        LOG.info("Personal client saved with id : {}", personalClient.getId());
+        LOG.info("Personal client saved with id : {}", personalClientSaved.getId());
 
         return PersonalClientResponseDTO.from(personalClientSaved);
     }

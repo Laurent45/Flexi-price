@@ -27,8 +27,8 @@ public class PersonalClient extends Client {
     protected PersonalClient() {
     }
 
-    public PersonalClient(String lastName, String firstName, String username) {
-        super(ClientType.PERSONAL);
+    public PersonalClient(Long id, String lastName, String firstName, String username, Long cartId) {
+        super(id, ClientType.PERSONAL, cartId);
 
         if (lastName == null || lastName.isBlank()) {
             throw new IllegalArgumentException("lastName cannot be null or empty");
@@ -45,6 +45,10 @@ public class PersonalClient extends Client {
         this.lastName = lastName;
         this.firstName = firstName;
         this.username = username;
+    }
+
+    public PersonalClient(String lastName, String firstName, String username) {
+        this(null, lastName, firstName, username, null);
     }
 
     public String getLastName() {
