@@ -1,4 +1,4 @@
-package org.capco.flexiprice.service.product;
+package org.capco.flexiprice.unit.service.product;
 
 import org.capco.flexiprice.dto.ProductDTO;
 import org.capco.flexiprice.dto.ProductPriceDTO;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 public class ProductServiceTest {
 
     @InjectMocks
-    private ProductService productService;
+    private org.capco.flexiprice.service.product.ProductService productService;
 
     @Mock
     private ProductRepository productRepository;

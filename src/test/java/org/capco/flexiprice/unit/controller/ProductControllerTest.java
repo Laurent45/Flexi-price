@@ -1,4 +1,4 @@
-package org.capco.flexiprice.controller;
+package org.capco.flexiprice.unit.controller;
 
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;

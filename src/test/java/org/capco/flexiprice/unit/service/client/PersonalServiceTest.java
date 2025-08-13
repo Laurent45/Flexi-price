@@ -1,4 +1,4 @@
-package org.capco.flexiprice.service.client;
+package org.capco.flexiprice.unit.service.client;
 
 import org.capco.flexiprice.dto.PersonalClientResponseDTO;
 import org.capco.flexiprice.dto.PersonalSaveRequestDTO;
@@ -6,6 +6,7 @@ import org.capco.flexiprice.entity.client.PersonalClient;
 import org.capco.flexiprice.exception.PersonalClientNotFoundException;
 import org.capco.flexiprice.exception.UserNameAlreadyExistsException;
 import org.capco.flexiprice.repository.client.PersonalRepository;
+import org.capco.flexiprice.service.client.PersonalService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

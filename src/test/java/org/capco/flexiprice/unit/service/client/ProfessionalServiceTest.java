@@ -1,4 +1,4 @@
-package org.capco.flexiprice.service.client;
+package org.capco.flexiprice.unit.service.client;
 
 import org.capco.flexiprice.dto.ProfessionalResponseDTO;
 import org.capco.flexiprice.dto.ProfessionalSaveRequestDTO;
@@ -7,6 +7,7 @@ import org.capco.flexiprice.enumeration.ClientType;
 import org.capco.flexiprice.exception.ProfessionalNotFoundException;
 import org.capco.flexiprice.exception.SirenNumberAlreadyExistsException;
 import org.capco.flexiprice.repository.client.ProfessionalRepository;
+import org.capco.flexiprice.service.client.ProfessionalService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
