@@ -10,7 +10,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "professional_client")
-public class Professional extends Client {
+public class ProfessionalClient extends Client {
 
     @Column(name = "legal_name", nullable = false)
     private String legalName;
@@ -28,7 +28,7 @@ public class Professional extends Client {
      * Protected no-arg constructor for JPA only.
      * Not intended for direct use in application code.
      */
-    protected Professional() {
+    protected ProfessionalClient() {
     }
 
     /**
@@ -37,7 +37,7 @@ public class Professional extends Client {
      * the appropriate {@link ClientType} before calling {@code super}. As a result,
      * instances must be created using the provided static {@code create} methods.
      */
-    private Professional(Long id, ClientType clientType, String legalName, String vatNumber, String sirenNumber, BigDecimal annualRevenue, Long cartId) {
+    private ProfessionalClient(Long id, ClientType clientType, String legalName, String vatNumber, String sirenNumber, BigDecimal annualRevenue, Long cartId) {
         super(id, clientType, cartId);
         this.legalName = legalName;
         this.vatNumber = vatNumber;
@@ -73,7 +73,7 @@ public class Professional extends Client {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Professional that)) return false;
+        if (!(o instanceof ProfessionalClient that)) return false;
         if (!super.equals(o)) return false;
         return Objects.equals(sirenNumber, that.sirenNumber);
     }
@@ -83,7 +83,7 @@ public class Professional extends Client {
         return Objects.hash(super.hashCode(), sirenNumber);
     }
 
-    public static Professional create(Long id, String legalName, String vatNumber, String sirenNumber, BigDecimal annualRevenue, Long cartId) {
+    public static ProfessionalClient create(Long id, String legalName, String vatNumber, String sirenNumber, BigDecimal annualRevenue, Long cartId) {
         if (legalName == null || legalName.isBlank()) {
             throw new IllegalArgumentException("legalName cannot be null or empty");
         }
@@ -98,11 +98,11 @@ public class Professional extends Client {
 
         ClientType clientType = determineClientTypeByRevenue(annualRevenue);
 
-        return new Professional(id, clientType, legalName, vatNumber, sirenNumber, annualRevenue, cartId);
+        return new ProfessionalClient(id, clientType, legalName, vatNumber, sirenNumber, annualRevenue, cartId);
     }
 
 
-    public static Professional create(String legalName, String vatNumber, String sirenNumber,  BigDecimal annualRevenue) {
+    public static ProfessionalClient create(String legalName, String vatNumber, String sirenNumber, BigDecimal annualRevenue) {
         return create(null, legalName, vatNumber, sirenNumber, annualRevenue, null);
     }
 

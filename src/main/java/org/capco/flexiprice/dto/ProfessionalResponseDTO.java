@@ -1,6 +1,6 @@
 package org.capco.flexiprice.dto;
 
-import org.capco.flexiprice.entity.client.Professional;
+import org.capco.flexiprice.entity.client.ProfessionalClient;
 import org.capco.flexiprice.enumeration.ClientType;
 
 import java.math.BigDecimal;
@@ -15,7 +15,7 @@ public record ProfessionalResponseDTO(
         Long cartId
 ) {
 
-    public static ProfessionalResponseDTO from(Professional professional) {
+    public static ProfessionalResponseDTO from(ProfessionalClient professional) {
         return new ProfessionalResponseDTO(
                 professional.getId(),
                 professional.getLegalName(),

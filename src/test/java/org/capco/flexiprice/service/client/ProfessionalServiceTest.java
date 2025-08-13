@@ -2,7 +2,7 @@ package org.capco.flexiprice.service.client;
 
 import org.capco.flexiprice.dto.ProfessionalResponseDTO;
 import org.capco.flexiprice.dto.ProfessionalSaveRequestDTO;
-import org.capco.flexiprice.entity.client.Professional;
+import org.capco.flexiprice.entity.client.ProfessionalClient;
 import org.capco.flexiprice.enumeration.ClientType;
 import org.capco.flexiprice.exception.ProfessionalNotFoundException;
 import org.capco.flexiprice.exception.SirenNumberAlreadyExistsException;
@@ -45,7 +45,7 @@ class ProfessionalServiceTest {
                 legalName, vatNumber, sirenNumber, annualRevenue
         );
 
-        Professional professional = Professional.create(
+        ProfessionalClient professional = ProfessionalClient.create(
                 clientId, legalName, vatNumber, sirenNumber, annualRevenue, cartId
         );
 
@@ -87,7 +87,7 @@ class ProfessionalServiceTest {
     void should_retrieve_professional_by_siren_number() {
         // GIVEN
         String sirenNumber = "732829320";
-        Professional professional = Professional.create(1L,
+        ProfessionalClient professional = ProfessionalClient.create(1L,
                 "SCI Stock Market",
                 "FR12345678901",
                 sirenNumber,

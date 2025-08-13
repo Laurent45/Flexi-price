@@ -44,7 +44,7 @@ public class ClientControllerTest {
 
 
     @Nested
-    class ProfessionalClientTest {
+    class ProfessionalClientClientTest {
 
         @BeforeEach
         void setUp() {

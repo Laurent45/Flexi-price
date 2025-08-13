@@ -2,7 +2,7 @@ package org.capco.flexiprice.service.client;
 
 import org.capco.flexiprice.dto.ProfessionalSaveRequestDTO;
 import org.capco.flexiprice.dto.ProfessionalResponseDTO;
-import org.capco.flexiprice.entity.client.Professional;
+import org.capco.flexiprice.entity.client.ProfessionalClient;
 import org.capco.flexiprice.exception.ProfessionalNotFoundException;
 import org.capco.flexiprice.exception.SirenNumberAlreadyExistsException;
 import org.capco.flexiprice.repository.client.ProfessionalRepository;
@@ -39,9 +39,9 @@ public class ProfessionalService {
             throw new SirenNumberAlreadyExistsException("Siren number [" + request.sirenNumber() + "] already exists");
         }
 
-        Professional professional = request.toProfessional();
+        ProfessionalClient professional = request.toProfessional();
         LOG.info("Client type: {}", professional.getClientType());
-        Professional professionalSaved = professionalRepository.save(professional);
+        ProfessionalClient professionalSaved = professionalRepository.save(professional);
 
         LOG.info("Professional saved with id: {}", professionalSaved.getId());
 

@@ -2,7 +2,7 @@ package org.capco.flexiprice.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.capco.flexiprice.entity.client.Professional;
+import org.capco.flexiprice.entity.client.ProfessionalClient;
 
 import java.math.BigDecimal;
 
@@ -18,7 +18,7 @@ public record ProfessionalSaveRequestDTO(
         @NotNull(message = "Annual revenue must not be null")
         BigDecimal annualRevenue
 ) {
-    public Professional toProfessional() {
-        return Professional.create(legalName, vatNumber, sirenNumber, annualRevenue);
+    public ProfessionalClient toProfessional() {
+        return ProfessionalClient.create(legalName, vatNumber, sirenNumber, annualRevenue);
     }
 }
