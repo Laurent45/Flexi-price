@@ -4,6 +4,7 @@ import org.capco.flexiprice.dto.ProfessionalResponseDTO;
 import org.capco.flexiprice.dto.ProfessionalSaveRequestDTO;
 import org.capco.flexiprice.entity.client.Professional;
 import org.capco.flexiprice.enumeration.ClientType;
+import org.capco.flexiprice.exception.ProfessionalNotFoundException;
 import org.capco.flexiprice.exception.SirenNumberAlreadyExistsException;
 import org.capco.flexiprice.repository.client.ProfessionalRepository;
 import org.junit.jupiter.api.Test;
@@ -13,12 +14,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +31,7 @@ class ProfessionalServiceTest {
     private ProfessionalService professionalService;
 
     @Test
-    void save_professional_client() {
+    void should_save_professional_client() {
         // GIVEN
         String legalName = "SCI Stock Market";
         String vatNumber = "FR12345678901";
@@ -61,8 +61,6 @@ class ProfessionalServiceTest {
 
         // THEN
         assertThat(response).isEqualTo(expected);
-        verify(professionalRepository).existsProfessionalBySirenNumber(sirenNumber);
-        verify(professionalRepository).save(any());
     }
 
     @Test
@@ -83,9 +81,48 @@ class ProfessionalServiceTest {
         assertThatThrownBy(() -> professionalService.saveProfessional(request))
                 // THEN
                 .isInstanceOf(SirenNumberAlreadyExistsException.class);
+    }
+
+    @Test
+    void should_retrieve_professional_by_siren_number() {
+        // GIVEN
+        String sirenNumber = "732829320";
+        Professional professional = Professional.create(1L,
+                "SCI Stock Market",
+                "FR12345678901",
+                sirenNumber,
+                BigDecimal.valueOf(10_000_000),
+                1L);
+        ProfessionalResponseDTO expectedResponse = new ProfessionalResponseDTO(
+                1L,
+                "SCI Stock Market",
+                "FR12345678901",
+                sirenNumber,
+                BigDecimal.valueOf(10_000_000),
+                ClientType.PROFESSIONAL_REVENUE_GTE_10M,
+                1L
+        );
+
+        when(professionalRepository.findProfessionalBySirenNumber(sirenNumber)).thenReturn(Optional.of(professional));
+
+        // WHEN
+        ProfessionalResponseDTO response = professionalService.getProfessional(sirenNumber);
 
         // THEN
-        verify(professionalRepository).existsProfessionalBySirenNumber(sirenNumber);
-        verify(professionalRepository, never()).save(any());
+        assertThat(response).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void should_throw_exception_when_professional_not_found() {
+        // GIVEN
+        String sirenNumber = "732829320";
+
+        when(professionalRepository.findProfessionalBySirenNumber(sirenNumber)).thenReturn(Optional.empty());
+
+        // WHEN
+        assertThatThrownBy(() -> professionalService.getProfessional(sirenNumber))
+                // THEN
+                .isInstanceOf(ProfessionalNotFoundException.class)
+                .hasMessageContaining("Professional not found for sirenNumber: " + sirenNumber);
     }
 }
