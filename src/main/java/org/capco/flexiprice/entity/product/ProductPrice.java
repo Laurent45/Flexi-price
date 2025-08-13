@@ -5,6 +5,7 @@ import org.capco.flexiprice.entity.cart.CartProductPrice;
 import org.capco.flexiprice.enumeration.ClientType;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,7 +31,7 @@ public class ProductPrice {
     private BigDecimal price;
 
     @OneToMany(mappedBy = "productPrice")
-    private List<CartProductPrice> cartProductPrices;
+    private List<CartProductPrice> cartProductPrices = new ArrayList<>();
 
     /**
      * Protected no-arg constructor for JPA only.
@@ -39,9 +40,14 @@ public class ProductPrice {
     protected ProductPrice() {
     }
 
-    public ProductPrice(ClientType clientType, BigDecimal price) {
+    public ProductPrice(Long id, ClientType clientType, BigDecimal price) {
+        this.id = id;
         this.clientType = clientType;
         this.price = price;
+    }
+
+    public ProductPrice(ClientType clientType, BigDecimal price) {
+        this(null, clientType, price);
     }
 
     public Long getId() {

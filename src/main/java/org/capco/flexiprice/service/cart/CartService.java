@@ -3,6 +3,7 @@ package org.capco.flexiprice.service.cart;
 import org.capco.flexiprice.dto.CartWithTotalAmountDTO;
 import org.capco.flexiprice.dto.ProductAddRequestDTO;
 import org.capco.flexiprice.dto.ProductAddToCartDTO;
+import org.capco.flexiprice.dto.ProductPriceDTO;
 import org.capco.flexiprice.entity.cart.Cart;
 import org.capco.flexiprice.entity.cart.CartProductPrice;
 import org.capco.flexiprice.entity.cart.CartProductPriceKey;
@@ -55,11 +56,11 @@ public class CartService {
                     return new CartNotFoundException("Cart with id " + cartId + " not found");
                 });
 
-        ProductPrice productPrice = productService.getProductPrice(productRequest.name(), cart.getClient().getClientType());
+        ProductPriceDTO productPriceDTO = productService.getProductPrice(productRequest.name(), cart.getClient().getClientType());
 
-        CartProductPriceKey cartProductPriceKey = new CartProductPriceKey(cartId, productPrice.getId());
+        CartProductPriceKey cartProductPriceKey = new CartProductPriceKey(cartId, productPriceDTO.id());
         CartProductPrice cartProductPrice = cartProductPriceRepository.findCartProductPriceByCartProductPriceKey(cartProductPriceKey)
-                .orElse(new CartProductPrice(cart, productPrice, 0));
+                .orElse(new CartProductPrice(cart, new ProductPrice(productPriceDTO.id(), productPriceDTO.clientType(), productPriceDTO.productPrice()), 0));
 
         cartProductPrice.addQuantity(productRequest.quantity());
 
