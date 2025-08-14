@@ -7,6 +7,19 @@ The company sells three types of products: high-end phones, mid-range phones, an
 There are two client types: personal and professional, each with specific pricing rules based on their types and for professional on their annual revenue.
 The application uses Spring Web and Spring Data JPA (Spring boot v.3.5.4), organized in a multi-layer architecture.
 
+## Database Schema
+
+The core entities are `clients`, `products`, `carts`, and `cart_items`.
+
+- `clients`: personal (username, first_name, last_name) or professional (legal_name, vat_number, siren_number, annual_revenue)
+- `products`: pricing columns per client type / revenue tier
+- `carts`: one per client
+- `cart_items`: product occurrences with quantity
+
+Diagram:
+
+![Database Schema](docs/flexi-price-db.svg)
+
 ## Getting Started
 
 ### Requirements
