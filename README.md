@@ -13,6 +13,8 @@ The application uses Spring Web and Spring Data JPA (Spring boot v.3.5.4), organ
 
 - Java 24
 - Maven 3.9.11
+- PostgreSQL 17
+- Docker
 - curl
 
 ### Download and Run
@@ -25,15 +27,23 @@ The application uses Spring Web and Spring Data JPA (Spring boot v.3.5.4), organ
    ```bash
    cd Flexi-price
    ```
-3. Build the project:
+3. Running tests: There are two different sets of tests: unit tests and integration tests.
+   - To run unit tests only: `./mvnw test`
+   - To run integration tests only: `./mvnw verify -Dskip.ut=true`
+   - To run all tests: `./mvnw verify`
+
+4. Build the project:
    ```bash
    ./mvnw clean package
    ```
-4. Run the application with H2 database (dev profile):
+5. Run the application with PostgreSQL v17 (default profile). First, set up the database using Docker:
    ```bash
-   SPRING_PROFILES_ACTIVE=dev ./mvnw spring-boot:run
+   docker run --name flexi-price-db -e POSTGRES_USER=my-username -e POSTGRES_PASSWORD=my-password -e POSTGRES_DB=flexi-price -p 5432:5432 --rm -d postgres:17
    ```
-   > For MySQL, use the default profile, add the dependency in `pom.xml`, and set up a local database (e.g., with Docker).
+   Then run the application:
+   ```bash
+   ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+   ```
 
 
 ## Example Scenarios
